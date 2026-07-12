@@ -1,0 +1,1 @@
+"""KukHire application package."""
