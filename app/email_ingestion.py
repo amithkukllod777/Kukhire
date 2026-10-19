@@ -30,6 +30,9 @@ class CandidateEmailInput(BaseModel):
     subject: str = ""
     body_text: str = ""
     received_at: str
+    # The workspace this message belongs to. Resolved by the connector from the mailbox
+    # connection; a message with no workspace is never turned into a candidate.
+    organization_id: str | None = None
     job_id: str | None = None
     attachments: list[AttachmentInput] = Field(default_factory=list)
 

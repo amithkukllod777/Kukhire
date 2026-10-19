@@ -215,40 +215,6 @@ class JSONResume(BaseModel):
     projects: Optional[List[Project]] = None
 
 
-class CategoryScore(BaseModel):
-    score: float = Field(ge=0, description="Score achieved in this category")
-    max: int = Field(gt=0, description="Maximum possible score")
-    evidence: str = Field(min_length=1, description="Evidence supporting the score")
-
-
-class Scores(BaseModel):
-    open_source: CategoryScore
-    self_projects: CategoryScore
-    production: CategoryScore
-    technical_skills: CategoryScore
-
-
-class BonusPoints(BaseModel):
-    total: float = Field(ge=0, le=20, description="Total bonus points")
-    breakdown: str = Field(description="Breakdown of bonus points")
-
-
-class Deductions(BaseModel):
-    total: float = Field(
-        ge=0,
-        description="Total deduction points (stored as positive, applied as negative)",
-    )
-    reasons: str = Field(description="Reasons for deductions")
-
-
-class EvaluationData(BaseModel):
-    scores: Scores
-    bonus_points: BonusPoints
-    deductions: Deductions
-    key_strengths: List[str] = Field(min_items=1, max_items=5)
-    areas_for_improvement: List[str] = Field(min_items=1, max_items=5)
-
-
 class GitHubProfile(BaseModel):
     """Pydantic model for GitHub profile data."""
 

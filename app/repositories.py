@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
@@ -36,6 +36,7 @@ class SqlAlchemyEmailRepository:
             subject=payload.subject,
             body_text=payload.body_text,
             received_at=payload.received_at,
+            organization_id=payload.organization_id,
             job_id=payload.job_id,
             attachments=[item.model_dump() for item in payload.attachments],
             status="received",
@@ -49,18 +50,26 @@ class SqlAlchemyEmailRepository:
 
 
 class SqlAlchemyCandidateResolver:
+    """Identity resolution WITHIN one workspace: a normalized email, never a name."""
+
     def __init__(self, session: Session) -> None:
         self.session = session
 
-    def resolve_or_create(self, *, email: str, name: str | None) -> str:
+    def resolve_or_create(self, *, organization_id: str, email: str, name: str | None) -> str:
         normalized = email.strip().lower()
-        candidate = self.session.scalar(select(Candidate).where(Candidate.email == normalized))
+        candidate = self.session.scalar(
+            select(Candidate).where(
+                Candidate.organization_id == organization_id, func.lower(Candidate.email) == normalized
+            )
+        )
         if candidate is not None:
             if name and (not candidate.full_name or candidate.full_name == normalized):
                 candidate.full_name = name
             return candidate.id
 
-        candidate = Candidate(full_name=name or normalized, email=normalized)
+        candidate = Candidate(
+            organization_id=organization_id, full_name=name or normalized, email=normalized, source="email"
+        )
         self.session.add(candidate)
         self.session.flush()
         return candidate.id
@@ -70,10 +79,14 @@ class SqlAlchemyApplicationResolver:
     def __init__(self, session: Session) -> None:
         self.session = session
 
-    def create_or_get(self, *, candidate_id: str, job_id: str | None, source: str) -> str | None:
+    def create_or_get(
+        self, *, organization_id: str, candidate_id: str, job_id: str | None, source: str
+    ) -> str | None:
         if job_id is None:
             return None
-        if self.session.get(Job, job_id) is None:
+        job = self.session.get(Job, job_id)
+        # A job id from another workspace is treated as "no job matched", never attached.
+        if job is None or job.organization_id != organization_id:
             return None
 
         stmt = select(Application).where(
@@ -84,7 +97,9 @@ class SqlAlchemyApplicationResolver:
         if application is not None:
             return application.id
 
-        application = Application(candidate_id=candidate_id, job_id=job_id, stage="applied")
+        application = Application(
+            organization_id=organization_id, candidate_id=candidate_id, job_id=job_id, stage="applied", source=source
+        )
         application.evaluation = {"source": source}
         self.session.add(application)
         self.session.flush()
