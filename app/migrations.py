@@ -132,3 +132,25 @@ def migrate(engine: Engine, directory: Path = MIGRATIONS_DIR, *, dry_run: bool =
             )
         applied.append(migration.version)
     return applied
+
+
+def main(argv: list[str] | None = None) -> int:
+    """``python -m app.migrations [--dry-run]`` — apply (or list) pending migrations."""
+    import argparse
+
+    from app.config import get_settings
+    from app.database import build_engine
+
+    p = argparse.ArgumentParser(description="Apply KukHire schema migrations in order.")
+    p.add_argument("--dry-run", action="store_true", help="list pending migrations; change nothing")
+    p.add_argument("--database-url", help="defaults to KUKHIRE_DATABASE_URL / DATABASE_URL")
+    args = p.parse_args(argv)
+    engine = build_engine(args.database_url or get_settings().database_url)
+    versions = migrate(engine, dry_run=args.dry_run)
+    verb = "would apply" if args.dry_run else "applied"
+    print(f"{verb}: {', '.join(versions) if versions else 'nothing (up to date)'}")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
