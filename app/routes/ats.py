@@ -306,9 +306,14 @@ def erase_candidate(candidate_id: str, ctx: OrgContext = Depends(require("candid
         # recruitment one, and is erased (or retained) under HRMS's rules — not by this endpoint.
         raise _err(409, "hired_in_hrms", "This person was hired and handed to HRMS; their employee record is managed there.")
     if app_ids:
+        scorecard_ids = [i for (i,) in db.execute(select(Scorecard.id).where(Scorecard.application_id.in_(app_ids))).all()]
+        # The import mapping keeps a verbatim copy of each legacy source row (personal data), so it
+        # goes with the person: applications' and scorecards' mappings alike.
+        db.execute(delete(LegacyImportMap).where(LegacyImportMap.target_table == "applications", LegacyImportMap.target_id.in_(app_ids)))
+        if scorecard_ids:
+            db.execute(delete(LegacyImportMap).where(LegacyImportMap.target_table == "scorecards", LegacyImportMap.target_id.in_(scorecard_ids)))
         for model in (Scorecard, Evaluation, ApplicationStageHistory, HiringHandoff):
             db.execute(delete(model).where(model.application_id.in_(app_ids)))
-        db.execute(delete(LegacyImportMap).where(LegacyImportMap.target_table == "applications", LegacyImportMap.target_id.in_(app_ids)))
         db.execute(delete(Application).where(Application.id.in_(app_ids)))
     audit.record(db, organization_id=ctx.org.id, actor_user_id=ctx.user_id, action="candidate.erased",
                  entity_type="candidate", entity_id=c.id, applications=len(app_ids))

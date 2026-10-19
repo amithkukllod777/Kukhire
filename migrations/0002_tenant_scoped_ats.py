@@ -172,6 +172,9 @@ def _new_tables(conn: Connection) -> None:
         Column("source_id", String(64), nullable=False),
         Column("target_table", String(60), nullable=False),
         Column("target_id", String(36), nullable=False),
+        # The complete source row, verbatim, so fields with no home in this schema (salary band,
+        # referral bonus status, legacy timestamps) are preserved rather than silently dropped.
+        Column("source_snapshot", JSON, nullable=True),
         Column("created_at", DateTime, nullable=False, server_default=now),
         UniqueConstraint(
             "organization_id", "source_system", "source_table", "source_id", name="uq_legacy_import_source"

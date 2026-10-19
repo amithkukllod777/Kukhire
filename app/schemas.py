@@ -183,9 +183,10 @@ class ScorecardIn(Strict):
 
     @field_validator("overall", "technical", "culture")
     @classmethod
-    def _half_points(cls, v: float | None) -> float | None:
-        if v is not None and round(v * 2) != v * 2:
-            raise ValueError("scores use 0.5 steps")
+    def _one_decimal(cls, v: float | None) -> float | None:
+        # One decimal place, like the legacy DECIMAL(3,1) column, so every legacy score is representable.
+        if v is not None and abs(round(v * 10) - v * 10) > 1e-9:
+            raise ValueError("scores have at most one decimal place")
         return v
 
 

@@ -258,6 +258,7 @@ class LegacyImportMap(Base):
     source_id: Mapped[str] = mapped_column(String(64), nullable=False)
     target_table: Mapped[str] = mapped_column(String(60), nullable=False)
     target_id: Mapped[str] = mapped_column(String(36), nullable=False)
+    source_snapshot: Mapped[dict | None] = mapped_column(JSON)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=utcnow, nullable=False)
 
 

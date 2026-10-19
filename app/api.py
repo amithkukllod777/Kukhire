@@ -143,9 +143,25 @@ def create_app(
     return app
 
 
-def _module_app() -> FastAPI:
-    return create_app()
+class _LazyApp:
+    """`uvicorn app.api:app` without building the app (and its database engine) at import time.
+
+    Importing this module must not need the configured database driver or touch the environment —
+    tools and tests import it freely. The real application is created on the first request.
+    """
+
+    _instance: FastAPI | None = None
+
+    def _get(self) -> FastAPI:
+        if self._instance is None:
+            self._instance = create_app()
+        return self._instance
+
+    async def __call__(self, scope, receive, send):
+        await self._get()(scope, receive, send)
+
+    def __getattr__(self, name):  # e.g. `app.openapi()` from tooling
+        return getattr(self._get(), name)
 
 
-# `uvicorn app.api:app`. Built lazily-safe: create_app never connects to the database.
-app = _module_app()
+app = _LazyApp()

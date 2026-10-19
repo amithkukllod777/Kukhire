@@ -1,6 +1,7 @@
+import os
 from functools import lru_cache
 
-from pydantic import AliasChoices, Field, field_validator
+from pydantic import Field, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -15,12 +16,9 @@ class Settings(BaseSettings):
 
     # Persistent storage. SQLite is a local-development convenience only; production uses
     # PostgreSQL (docs/MVP_ARCHITECTURE.md). There is deliberately no in-memory fallback.
-    # `DATABASE_URL` is the name the previous Settings read; it keeps working. KUKHIRE_DATABASE_URL
-    # wins when both are set.
-    database_url: str = Field(
-        default="sqlite:///./kukhire.db",
-        validation_alias=AliasChoices("KUKHIRE_DATABASE_URL", "DATABASE_URL"),
-    )
+    # Precedence: an explicit argument > KUKHIRE_DATABASE_URL > DATABASE_URL (the name the previous
+    # Settings read, kept working) > the local SQLite default.
+    database_url: str = Field(default_factory=lambda: os.getenv("DATABASE_URL") or "sqlite:///./kukhire.db")
 
     max_resume_size_mb: int = 10
     allowed_resume_extensions: tuple[str, ...] = ("pdf", "docx")
