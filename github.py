@@ -141,7 +141,6 @@ def extract_github_username(github_url: str) -> Optional[str]:
 def fetch_github_profile(github_url: str) -> Optional[GitHubProfile]:
     try:
         username = extract_github_username(github_url)
-        logger.info(f"{username}")
         if not username:
             print(f"Could not extract username from: {github_url}")
             return None
@@ -429,8 +428,7 @@ def generate_projects_json(projects: List[Dict]) -> List[Dict]:
             return unique_projects
 
         except json.JSONDecodeError as e:
-            print(f"ERROR: Error parsing LLM response: {e}")
-            print(f"ERROR: Raw response: {response_text}")
+            print(f"ERROR: Error parsing LLM response: {type(e).__name__}")
 
             print("🔄 Falling back to first 7 projects")
             return projects_data[:7]

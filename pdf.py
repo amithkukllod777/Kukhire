@@ -125,12 +125,15 @@ class PDFHandler:
 
                 return transformed_data
             except json.JSONDecodeError as e:
-                logger.error(f"❌ Error parsing JSON for {section_name} section: {e}")
-                logger.error(f"Raw response: {response_text}")
+                # The raw response is the candidate's resume content: log its size, never the text.
+                logger.error(
+                    f"❌ Error parsing JSON for {section_name} section: {type(e).__name__} "
+                    f"(response length {len(response_text)})"
+                )
                 return None
 
         except Exception as e:
-            logger.error(f"❌ Error calling LLM for {section_name} section: {e}")
+            logger.error(f"❌ Error calling LLM for {section_name} section: {type(e).__name__}")
             return None
 
     def extract_basics_section(self, resume_text: str) -> Optional[Dict]:

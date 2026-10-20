@@ -11,11 +11,13 @@ class ResumeParser(Protocol):
 
 
 class CandidateResolver(Protocol):
-    def resolve_or_create(self, *, email: str, name: str | None) -> str: ...
+    def resolve_or_create(self, *, organization_id: str, email: str, name: str | None) -> str: ...
 
 
 class ApplicationResolver(Protocol):
-    def create_or_get(self, *, candidate_id: str, job_id: str | None, source: str) -> str | None: ...
+    def create_or_get(
+        self, *, organization_id: str, candidate_id: str, job_id: str | None, source: str
+    ) -> str | None: ...
 
 
 @dataclass(frozen=True)
@@ -49,11 +51,20 @@ class EmailCandidatePipeline:
         if result.status != "queued" or not result.resume_attachment:
             return PipelineResult(ingestion=result)
 
+        if not payload.organization_id:
+            # No workspace, no candidate: creating one would put a person in nobody's tenant.
+            result.status = "needs_review"
+            result.human_review_required = True
+            result.warnings.append("Message has no workspace; it was kept for review, not turned into a candidate.")
+            return PipelineResult(ingestion=result)
+
         candidate_id = self.candidate_resolver.resolve_or_create(
+            organization_id=payload.organization_id,
             email=str(payload.sender_email),
             name=payload.sender_name,
         )
         application_id = self.application_resolver.create_or_get(
+            organization_id=payload.organization_id,
             candidate_id=candidate_id,
             job_id=payload.job_id,
             source="email",

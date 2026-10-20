@@ -26,6 +26,8 @@ class IngestedEmail(Base):
     body_text: Mapped[str] = mapped_column(Text, default="", nullable=False)
     received_at: Mapped[str] = mapped_column(String(64), nullable=False)
     job_id: Mapped[str | None] = mapped_column(ForeignKey("jobs.id"), index=True)
+    # Added by migration 0002; backfilled from the job, else from the mailbox connection.
+    organization_id: Mapped[str | None] = mapped_column(ForeignKey("organizations.id"), index=True)
     attachments: Mapped[list] = mapped_column(JSON, default=list, nullable=False)
     status: Mapped[str] = mapped_column(String(40), default="received", nullable=False)
     error_message: Mapped[str | None] = mapped_column(Text)

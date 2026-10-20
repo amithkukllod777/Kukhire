@@ -1,0 +1,197 @@
+{
+  "format": "kukbook-recruitment-export",
+  "format_version": 1,
+  "source_system": "kukbook-erp",
+  "exported_at": "2026-10-19T17:32:17.696Z",
+  "company": {
+    "ref": "940100",
+    "name": "Legacy Synthetic Co"
+  },
+  "optional_columns_present": [
+    "cand_employeeId",
+    "cand_referrerEmployeeId",
+    "cand_referralBonusStatus"
+  ],
+  "tables": {
+    "job_positions": [
+      {
+        "jp_id": 27,
+        "jp_companyId": 940100,
+        "jp_title": "Backend Engineer",
+        "jp_department": "Platform",
+        "jp_location": "Pune",
+        "jp_type": "full_time",
+        "jp_description": "Build services",
+        "jp_requirements": "Python",
+        "jp_salaryFrom": "60000.00",
+        "jp_salaryTo": "90000.00",
+        "jp_status": "open",
+        "jp_openings": 2,
+        "jp_postedDate": "2026-01-02",
+        "jp_closingDate": "2026-12-31",
+        "jp_createdAt": "2026-10-19 17:31:15"
+      },
+      {
+        "jp_id": 28,
+        "jp_companyId": 940100,
+        "jp_title": "Support Lead",
+        "jp_department": "Ops",
+        "jp_location": "Remote",
+        "jp_type": "contract",
+        "jp_description": null,
+        "jp_requirements": null,
+        "jp_salaryFrom": null,
+        "jp_salaryTo": null,
+        "jp_status": "closed",
+        "jp_openings": 1,
+        "jp_postedDate": null,
+        "jp_closingDate": null,
+        "jp_createdAt": "2026-10-19 17:31:15"
+      }
+    ],
+    "candidates": [
+      {
+        "cand_id": 27,
+        "cand_companyId": 940100,
+        "cand_jobId": 27,
+        "cand_name": "Zoë Müller 日本語",
+        "cand_email": "zoe@example.com",
+        "cand_phone": "9",
+        "cand_stage": "new",
+        "cand_source": "linkedin",
+        "cand_resumeUrl": "https://files.example.com/zoe.pdf",
+        "cand_notes": "n",
+        "cand_rating": 4,
+        "cand_expectedSalary": "75000.00",
+        "cand_noticePeriod": "30 days",
+        "cand_interviewDate": "2026-02-03",
+        "cand_assignedTo": "Hana",
+        "cand_createdAt": "2026-10-19 17:31:15",
+        "cand_updatedAt": "2026-10-19 17:32:17",
+        "cand_employeeId": null,
+        "cand_referrerEmployeeId": null,
+        "cand_referralBonusStatus": null
+      },
+      {
+        "cand_id": 28,
+        "cand_companyId": 940100,
+        "cand_jobId": 27,
+        "cand_name": "Hired Hannah",
+        "cand_email": "hannah@example.com",
+        "cand_phone": "9",
+        "cand_stage": "hired",
+        "cand_source": "referral",
+        "cand_resumeUrl": null,
+        "cand_notes": null,
+        "cand_rating": 5,
+        "cand_expectedSalary": "80000.00",
+        "cand_noticePeriod": null,
+        "cand_interviewDate": null,
+        "cand_assignedTo": null,
+        "cand_createdAt": "2026-10-19 17:31:15",
+        "cand_updatedAt": "2026-10-19 17:31:15",
+        "cand_employeeId": 212,
+        "cand_referrerEmployeeId": 212,
+        "cand_referralBonusStatus": "pending"
+      },
+      {
+        "cand_id": 29,
+        "cand_companyId": 940100,
+        "cand_jobId": 28,
+        "cand_name": "Ravi Rejected",
+        "cand_email": "ravi@example.com",
+        "cand_phone": null,
+        "cand_stage": "rejected",
+        "cand_source": "website",
+        "cand_resumeUrl": null,
+        "cand_notes": null,
+        "cand_rating": null,
+        "cand_expectedSalary": null,
+        "cand_noticePeriod": null,
+        "cand_interviewDate": null,
+        "cand_assignedTo": null,
+        "cand_createdAt": "2026-10-19 17:31:15",
+        "cand_updatedAt": "2026-10-19 17:31:15",
+        "cand_employeeId": null,
+        "cand_referrerEmployeeId": null,
+        "cand_referralBonusStatus": null
+      },
+      {
+        "cand_id": 30,
+        "cand_companyId": 940100,
+        "cand_jobId": 27,
+        "cand_name": "Odd Stage",
+        "cand_email": "odd@example.com",
+        "cand_phone": null,
+        "cand_stage": "on_hold_by_boss",
+        "cand_source": "manual",
+        "cand_resumeUrl": null,
+        "cand_notes": null,
+        "cand_rating": null,
+        "cand_expectedSalary": null,
+        "cand_noticePeriod": null,
+        "cand_interviewDate": null,
+        "cand_assignedTo": null,
+        "cand_createdAt": "2026-10-19 17:31:15",
+        "cand_updatedAt": "2026-10-19 17:31:15",
+        "cand_employeeId": null,
+        "cand_referrerEmployeeId": null,
+        "cand_referralBonusStatus": null
+      }
+    ],
+    "hr_interview_scorecards": [
+      {
+        "his_id": 1,
+        "his_companyId": 940100,
+        "his_candidateId": 27,
+        "his_interviewerName": "Ivy",
+        "his_overall": "4.5",
+        "his_technical": "4.0",
+        "his_culture": null,
+        "his_notes": "good",
+        "his_interviewDate": "2026-02-04",
+        "his_createdBy": 1,
+        "his_createdAt": "2026-10-19 17:31:15"
+      },
+      {
+        "his_id": 2,
+        "his_companyId": 940100,
+        "his_candidateId": 28,
+        "his_interviewerName": "Jo",
+        "his_overall": "3.7",
+        "his_technical": null,
+        "his_culture": "4.0",
+        "his_notes": "ok",
+        "his_interviewDate": "2026-02-05",
+        "his_createdBy": 1,
+        "his_createdAt": "2026-10-19 17:31:15"
+      },
+      {
+        "his_id": 3,
+        "his_companyId": 940100,
+        "his_candidateId": 999999,
+        "his_interviewerName": "Orphan",
+        "his_overall": "3.0",
+        "his_technical": null,
+        "his_culture": null,
+        "his_notes": "no candidate",
+        "his_interviewDate": "2026-02-06",
+        "his_createdBy": 1,
+        "his_createdAt": "2026-10-19 17:31:15"
+      }
+    ],
+    "employees": [
+      {
+        "id": 212,
+        "empId": "EMP-940"
+      }
+    ]
+  },
+  "counts": {
+    "job_positions": 2,
+    "candidates": 4,
+    "hr_interview_scorecards": 3,
+    "employees": 1
+  },
+  "checksum": "1bae894ab0593f04aac8acf42a3d70b8ced6b39d9b1a25259a132145a68ebfa0"
+}
